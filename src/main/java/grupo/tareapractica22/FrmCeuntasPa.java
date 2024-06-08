@@ -223,7 +223,7 @@ public class FrmCeuntasPa extends javax.swing.JFrame {
     private void jToggleButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton2ActionPerformed
         // TODO add your handling code here:
         CuentasPa cuentas = new CuentasPa();
-        cuentas.ModificarCuenta(txtNumeroCuenta, txtNombre, txtTipo, txtNivel);
+        cuentas.ModificarCuenta(txtNumeroCuenta, txtNombre, txtTipo, txtNivel,cbPadre);
         cuentas.MostrarCuenta(tbTotalCuenta);
     }//GEN-LAST:event_jToggleButton2ActionPerformed
 

@@ -17,11 +17,13 @@ import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
+
 /**
  *
  * @author emers
  */
 public class CuentasPa {
+
     private int cuentaID;
     private String numeroCuenta;
     private String nombre;
@@ -101,7 +103,7 @@ public class CuentasPa {
         }
     }
 
-    public void crear(JTextField paramNumeroCuenta, JTextField paramNombre, JTextField paramTipo, JTextField paramNivel,JComboBox<String> paramPadre) {
+    public void crear(JTextField paramNumeroCuenta, JTextField paramNombre, JTextField paramTipo, JTextField paramNivel, JComboBox<String> paramPadre) {
         setNumeroCuenta(paramNumeroCuenta.getText());
         setNombre(paramNombre.getText());
         setTipo(paramTipo.getText());
@@ -126,14 +128,14 @@ public class CuentasPa {
         // Insertar la cuenta en la base de datos
 
         //String consulta = "INSERT INTO Cuentas (NumeroCuenta, Nombre, Tipo, Nivel) VALUES (?, ?, ?, ?);";
-         String consulta = "INSERT INTO Cuentas (NumeroCuenta, Nombre, Tipo, Nivel, Padre) VALUES (?, ?, ?, ?, ?);";
+        String consulta = "INSERT INTO Cuentas (NumeroCuenta, Nombre, Tipo, Nivel, Padre) VALUES (?, ?, ?, ?, ?);";
         try {
             CallableStatement cs = ComunDB.obtenerConexion().prepareCall(consulta);
             cs.setString(1, getNumeroCuenta());
             cs.setString(2, getNombre());
             cs.setString(3, getTipo());
             cs.setInt(4, getNivel());
-             cs.setObject(5, getPadre() != 0 ? getPadre() : null);
+            cs.setObject(5, getPadre() != 0 ? getPadre() : null);
             cs.execute();
 
             JOptionPane.showMessageDialog(null, "Se insertó correctamente la Cuenta");
@@ -183,7 +185,7 @@ public class CuentasPa {
         }
     }
 
-    public void SeleccionarCuenta(JTable paramTablaCuenta, JTextField paramId, JTextField paramNumeroCuenta, JTextField paramNombre, JTextField paramTipo, JTextField paramNivel,JComboBox<String> paramPadre) {
+    public void SeleccionarCuenta(JTable paramTablaCuenta, JTextField paramId, JTextField paramNumeroCuenta, JTextField paramNombre, JTextField paramTipo, JTextField paramNivel, JComboBox<String> paramPadre) {
         try {
             int fila = paramTablaCuenta.getSelectedRow();
             if (fila >= 0) {
@@ -192,12 +194,12 @@ public class CuentasPa {
                 paramNombre.setText((paramTablaCuenta.getValueAt(fila, 2)).toString());
                 paramTipo.setText((paramTablaCuenta.getValueAt(fila, 3)).toString());
                 paramNivel.setText((paramTablaCuenta.getValueAt(fila, 4)).toString());
-              Object valorPadre = paramTablaCuenta.getValueAt(fila, 5);
-               if (valorPadre != null) {
-                   paramPadre.setSelectedItem(valorPadre.toString());
-              } else {
-                   paramPadre.setSelectedItem(null); // Establecer el JComboBox como nulo si el valor es nulo
-               }
+                Object valorPadre = paramTablaCuenta.getValueAt(fila, 5);
+                if (valorPadre != null) {
+                    paramPadre.setSelectedItem(valorPadre.toString());
+                } else {
+                    paramPadre.setSelectedItem(null); // Establecer el JComboBox como nulo si el valor es nulo
+                }
             } else {
                 JOptionPane.showMessageDialog(null, "Fila No seleccionada");
             }
@@ -207,20 +209,35 @@ public class CuentasPa {
 
     }
 
-    public void ModificarCuenta(JTextField paramNumeroCuenta, JTextField paramNombre, JTextField paramTipo, JTextField paramNivel) {
+    public void ModificarCuenta(JTextField paramNumeroCuenta, JTextField paramNombre, JTextField paramTipo, JTextField paramNivel, JComboBox<String> paramPadre) {
         setNumeroCuenta(paramNumeroCuenta.getText());
         setNombre(paramNombre.getText());
         setTipo(paramTipo.getText());
         setNivel(Integer.parseInt(paramNivel.getText())); // Asegúrate de convertir el texto a entero
 
-        String consulta = "UPDATE Cuentas SET Nombre = ?, Tipo = ?, Nivel = ? WHERE NumeroCuenta = ?;";
+        // Obtener el valor del JComboBox y configurarlo
+        String padreSeleccionado = (String) paramPadre.getSelectedItem();
+        if (padreSeleccionado != null && !padreSeleccionado.equals("Seleccione una cuenta")) {
+            try {
+                setPadre(Integer.parseInt(padreSeleccionado));
+            } catch (NumberFormatException e) {
+                System.err.println("Error: el valor seleccionado en el JComboBox no es un número válido.");
+                e.printStackTrace();
+                setPadre(null); // Si no es un número válido, establecer el padre como nulo
+            }
+        } else {
+            setPadre(null); // Si no se seleccionó ningún padre válido, establecer el padre como nulo
+        }
+
+        String consulta = "UPDATE Cuentas SET Nombre = ?, Tipo = ?, Nivel = ?, Padre = ? WHERE NumeroCuenta = ?;";
 
         try {
             CallableStatement cs = ComunDB.obtenerConexion().prepareCall(consulta);
-            cs.setString(1, getNombre());        // Primer parámetro: Nombre
-            cs.setString(2, getTipo());          // Segundo parámetro: Tipo
-            cs.setInt(3, getNivel());            // Tercer parámetro: Nivel (asegúrate que getNivel retorna un entero)
-            cs.setString(4, getNumeroCuenta());  // Cuarto parámetro: NumeroCuenta
+            cs.setString(1, getNombre());       // Primer parámetro: Nombre
+            cs.setString(2, getTipo());         // Segundo parámetro: Tipo
+            cs.setInt(3, getNivel());           // Tercer parámetro: Nivel (asegúrate que getNivel retorna un entero)
+            cs.setObject(4, getPadre());        // Cuarto parámetro: Padre (puede ser nulo)
+            cs.setString(5, getNumeroCuenta()); // Quinto parámetro: NumeroCuenta
 
             cs.execute();
             JOptionPane.showMessageDialog(null, "Modificación exitosa");
@@ -242,5 +259,5 @@ public class CuentasPa {
             JOptionPane.showMessageDialog(null, "Error al eliminar la cuenta " + numeroCuenta + ": " + e.toString());
         }
     }
-    
+
 }
