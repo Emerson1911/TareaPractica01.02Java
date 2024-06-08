@@ -237,7 +237,7 @@ public class FrmCeuntasPa extends javax.swing.JFrame {
     private void tbTotalCuentaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbTotalCuentaMouseClicked
         // TODO add your handling code here:
         CuentasPa cuentas = new CuentasPa();
-        cuentas.SeleccionarCuenta(tbTotalCuenta, txtTipo, txtNumeroCuenta, txtNombre, txtTipo, txtNivel);
+        cuentas.SeleccionarCuenta(tbTotalCuenta, txtTipo, txtNumeroCuenta, txtNombre, txtTipo, txtNivel,cbPadre);
     }//GEN-LAST:event_tbTotalCuentaMouseClicked
 
     /**

@@ -183,7 +183,7 @@ public class CuentasPa {
         }
     }
 
-    public void SeleccionarCuenta(JTable paramTablaCuenta, JTextField paramId, JTextField paramNumeroCuenta, JTextField paramNombre, JTextField paramTipo, JTextField paramNivel) {
+    public void SeleccionarCuenta(JTable paramTablaCuenta, JTextField paramId, JTextField paramNumeroCuenta, JTextField paramNombre, JTextField paramTipo, JTextField paramNivel,JComboBox<String> paramPadre) {
         try {
             int fila = paramTablaCuenta.getSelectedRow();
             if (fila >= 0) {
@@ -192,12 +192,12 @@ public class CuentasPa {
                 paramNombre.setText((paramTablaCuenta.getValueAt(fila, 2)).toString());
                 paramTipo.setText((paramTablaCuenta.getValueAt(fila, 3)).toString());
                 paramNivel.setText((paramTablaCuenta.getValueAt(fila, 4)).toString());
-//                Object valorPadre = paramTablaCuenta.getValueAt(fila, 5);
-//                if (valorPadre != null) {
-//                    paramPadre.setSelectedItem(valorPadre.toString());
-//                } else {
-//                    paramPadre.setSelectedItem(null); // Establecer el JComboBox como nulo si el valor es nulo
-//                }
+              Object valorPadre = paramTablaCuenta.getValueAt(fila, 5);
+               if (valorPadre != null) {
+                   paramPadre.setSelectedItem(valorPadre.toString());
+              } else {
+                   paramPadre.setSelectedItem(null); // Establecer el JComboBox como nulo si el valor es nulo
+               }
             } else {
                 JOptionPane.showMessageDialog(null, "Fila No seleccionada");
             }
