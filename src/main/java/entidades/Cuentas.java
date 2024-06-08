@@ -10,6 +10,7 @@ import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -77,6 +78,30 @@ public class Cuentas {
     public void setPadre(Integer padre) {
         this.padre = padre;
     }
+    public void cargardatosPadre(JComboBox<String> comboBox){
+        comboBox.removeAllItems();
+    String consulta ="SELECT CuentaID, NumeroCuenta, Nombre, Tipo, Nivel, Padre FROM Cuentas;";
+    try {
+        ComunDB conexion = new ComunDB();
+        CallableStatement cs = conexion.obtenerConexion().prepareCall(consulta);
+        ResultSet rs = cs.executeQuery();
+
+        // Agregar los datos al JComboBox como String
+        while (rs.next()) {
+            // Obtener el valor del CuentaID
+            int cuentaID = rs.getInt("CuentaID");
+            // Agregar el valor como String al JComboBox
+            comboBox.addItem(cuentaID != 0 ? String.valueOf(cuentaID) : null);
+        }
+
+        rs.close();
+        //cs.close(); // Cierra el statement
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(null, "Error al cargar los datos del JComboBox: " + e.toString());
+    }
+    }
+    
+   
 
     public void crear(JTextField paramNumeroCuenta, JTextField paramNombre, JTextField paramTipo, JTextField paramNivel) {
         setNumeroCuenta(paramNumeroCuenta.getText());
