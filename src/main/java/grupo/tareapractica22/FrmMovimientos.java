@@ -20,6 +20,7 @@ public class FrmMovimientos extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         Movimientos movimientos = new Movimientos();
         movimientos.cargardatosID(cbCuentaID);
+        movimientos.mostrarMovimientos(tbRegistroMovimientos);
     }
 
     /**
@@ -47,7 +48,7 @@ public class FrmMovimientos extends javax.swing.JFrame {
         txtFecha = new javax.swing.JTextField();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tbRegistroMovimientos = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -73,6 +74,11 @@ public class FrmMovimientos extends javax.swing.JFrame {
         });
 
         jToggleButton2.setText("Modificar");
+        jToggleButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jToggleButton2ActionPerformed(evt);
+            }
+        });
 
         jToggleButton3.setText("Eliminar");
 
@@ -144,7 +150,7 @@ public class FrmMovimientos extends javax.swing.JFrame {
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Registro de Movimientos"));
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tbRegistroMovimientos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {},
                 {},
@@ -155,7 +161,12 @@ public class FrmMovimientos extends javax.swing.JFrame {
 
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        tbRegistroMovimientos.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbRegistroMovimientosMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tbRegistroMovimientos);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -163,14 +174,14 @@ public class FrmMovimientos extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 565, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 420, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 14, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 309, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -180,18 +191,18 @@ public class FrmMovimientos extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(30, 30, 30)
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(23, Short.MAX_VALUE))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -201,7 +212,21 @@ public class FrmMovimientos extends javax.swing.JFrame {
         // TODO add your handling code here:
         Movimientos movimientos = new Movimientos();
         movimientos.crear(txtFecha, cbCuentaID, txtDescripcion, txtDebe, txtHaber);
+        movimientos.mostrarMovimientos(tbRegistroMovimientos);
     }//GEN-LAST:event_jToggleButton1ActionPerformed
+
+    private void tbRegistroMovimientosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbRegistroMovimientosMouseClicked
+        // TODO add your handling code here:
+        Movimientos movimientos = new Movimientos();
+        movimientos.SeleccionarMovimiento(tbRegistroMovimientos, txtFecha, cbCuentaID, txtDescripcion, txtDebe, txtHaber);
+    }//GEN-LAST:event_tbRegistroMovimientosMouseClicked
+
+    private void jToggleButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton2ActionPerformed
+        // TODO add your handling code here:
+        Movimientos movimientos = new Movimientos();
+        //movimientos.ModificarCuenta(tbRegistroMovimientos, txtFecha, cbCuentaID, txtDescripcion, txtDebe, txtHaber);
+        movimientos.mostrarMovimientos(tbRegistroMovimientos);
+    }//GEN-LAST:event_jToggleButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -248,10 +273,10 @@ public class FrmMovimientos extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JToggleButton jToggleButton1;
     private javax.swing.JToggleButton jToggleButton2;
     private javax.swing.JToggleButton jToggleButton3;
+    private javax.swing.JTable tbRegistroMovimientos;
     private javax.swing.JTextField txtDebe;
     private javax.swing.JTextField txtDescripcion;
     private javax.swing.JTextField txtFecha;

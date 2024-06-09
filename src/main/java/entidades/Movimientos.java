@@ -7,12 +7,18 @@ package entidades;
 import accesoadatos.ComunDB;
 import java.math.BigDecimal;
 import java.sql.CallableStatement;
+import java.sql.Connection;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -78,7 +84,7 @@ public class Movimientos {
     public void cargardatosID(JComboBox<String> comboBox) {
         comboBox.removeAllItems();
         comboBox.addItem("Seleccione una cuenta"); // Agregar ítem predeterminado
-        String consulta = "SELECT MovimientoID, Fecha, CuentaID, Descripcion, Debe, Haber FROM Movimientos;";
+        String consulta = "SELECT CuentaID, NumeroCuenta, Nombre, Tipo, Nivel, Padre FROM Cuentas;";
         try {
             ComunDB conexion = new ComunDB();
             CallableStatement cs = conexion.obtenerConexion().prepareCall(consulta);
@@ -100,21 +106,91 @@ public class Movimientos {
     }
 
     public void crear(JTextField paramFecha, JComboBox<String> paramCuentaID, JTextField Descripcion, JTextField paramDebe, JTextField paramHaber) {
-        // Insertar la cuenta en la base de datos
+        // Insertar el movimiento en la base de datos
         String consulta = "INSERT INTO Movimientos (Fecha, CuentaID, Descripcion, Debe, Haber) VALUES (?, ?, ?, ?, ?)";
         try {
             CallableStatement cs = ComunDB.obtenerConexion().prepareCall(consulta);
-            cs.setString(1, paramFecha.getText());
+
+            // Convertir la fecha al formato adecuado
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            java.util.Date parsedDate = dateFormat.parse(paramFecha.getText());
+            java.sql.Date sqlDate = new java.sql.Date(parsedDate.getTime()); // Convertir a java.sql.Date
+
+            // Establecer los valores de los parámetros
+            cs.setDate(1, sqlDate);
             cs.setString(2, (String) paramCuentaID.getSelectedItem());
             cs.setString(3, Descripcion.getText());
             cs.setDouble(4, Double.parseDouble(paramDebe.getText()));
             cs.setDouble(5, Double.parseDouble(paramHaber.getText()));
+
+            // Ejecutar la consulta
             cs.execute();
+
             JOptionPane.showMessageDialog(null, "Se insertó correctamente el movimiento");
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(null, "Error: Los valores de Debe y Haber deben ser números.");
+        } catch (ParseException e) {
+            JOptionPane.showMessageDialog(null, "Error al convertir la fecha: Formato de fecha incorrecto.");
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Error al insertar el movimiento: " + e.getMessage());
         }
     }
+
+    public void mostrarMovimientos(JTable tablaMovimientos) {
+        DefaultTableModel modelo = new DefaultTableModel();
+        modelo.addColumn("MovimientoID");
+        modelo.addColumn("Fecha");
+        modelo.addColumn("CuentaID");
+        modelo.addColumn("Descripcion");
+        modelo.addColumn("Debe");
+        modelo.addColumn("Haber");
+
+        tablaMovimientos.setModel(modelo);
+
+        String sql = "SELECT * FROM Movimientos;";
+
+        try (Connection connection = ComunDB.obtenerConexion(); Statement st = connection.createStatement(); ResultSet rs = st.executeQuery(sql)) {
+
+            while (rs.next()) {
+                Object[] datos = new Object[6];
+                datos[0] = rs.getInt("MovimientoID");
+                datos[1] = rs.getDate("Fecha");
+                datos[2] = rs.getInt("CuentaID");
+                datos[3] = rs.getString("Descripcion");
+                datos[4] = rs.getBigDecimal("Debe");
+                datos[5] = rs.getBigDecimal("Haber");
+
+                modelo.addRow(datos);
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error al mostrar los registros de movimientos: " + e.getMessage());
+        }
+    }
+
+    public void SeleccionarMovimiento(JTable paramTablaCuenta, JTextField paramFecha, JComboBox<String> paramCuentaID, JTextField Descripcion, JTextField paramDebe, JTextField paramHaber) {
+        try {
+            int fila = paramTablaCuenta.getSelectedRow();
+            if (fila >= 0) {
+                paramFecha.setText((paramTablaCuenta.getValueAt(fila, 1)).toString());
+
+                // Si paramCuentaID es un JComboBox y quieres establecer un elemento seleccionado, usa setSelectedItem
+                //paramCuentaID.setSelectedItem(paramTablaCuenta.getValueAt(fila, 1).toString());
+                Object valorCuentaID = paramTablaCuenta.getValueAt(fila, 2);
+                if (valorCuentaID != null) {
+                    paramCuentaID.setSelectedItem(valorCuentaID.toString());
+                } else {
+                    paramCuentaID.setSelectedItem(null); // Establecer el JComboBox como nulo si el valor es nulo
+                }
+                Descripcion.setText((paramTablaCuenta.getValueAt(fila, 3)).toString());
+                paramDebe.setText((paramTablaCuenta.getValueAt(fila, 4)).toString());
+                paramHaber.setText((paramTablaCuenta.getValueAt(fila, 5)).toString());
+            } else {
+                JOptionPane.showMessageDialog(null, "Ninguna fila seleccionada");
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error al seleccionar la fila: " + e.toString());
+        }
+
+    }
+
 }
