@@ -189,7 +189,7 @@ public class CuentasPa {
         try {
             int fila = paramTablaCuenta.getSelectedRow();
             if (fila >= 0) {
-                //paramId.setText((paramTablaCuenta.getValueAt(fila, 0)).toString());
+                paramId.setText((paramTablaCuenta.getValueAt(fila, 0)).toString());
                 paramNumeroCuenta.setText((paramTablaCuenta.getValueAt(fila, 1)).toString());
                 paramNombre.setText((paramTablaCuenta.getValueAt(fila, 2)).toString());
                 paramTipo.setText((paramTablaCuenta.getValueAt(fila, 3)).toString());
