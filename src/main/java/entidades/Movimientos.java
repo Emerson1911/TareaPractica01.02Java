@@ -106,36 +106,59 @@ public class Movimientos {
     }
 
     public void crear(JTextField paramFecha, JComboBox<String> paramCuentaID, JTextField Descripcion, JTextField paramDebe, JTextField paramHaber) {
-        // Insertar el movimiento en la base de datos
-        String consulta = "INSERT INTO Movimientos (Fecha, CuentaID, Descripcion, Debe, Haber) VALUES (?, ?, ?, ?, ?)";
-        try {
-            CallableStatement cs = ComunDB.obtenerConexion().prepareCall(consulta);
-
-            // Convertir la fecha al formato adecuado para la base de datos
-            SimpleDateFormat inputDateFormat = new SimpleDateFormat("dd-MM-yyyy");
-            java.util.Date parsedDate = inputDateFormat.parse(paramFecha.getText());
-            SimpleDateFormat outputDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            String formattedDate = outputDateFormat.format(parsedDate);
-
-            // Establecer los valores de los parámetros
-            cs.setString(1, formattedDate);
-            cs.setString(2, (String) paramCuentaID.getSelectedItem());
-            cs.setString(3, Descripcion.getText());
-            cs.setDouble(4, Double.parseDouble(paramDebe.getText()));
-            cs.setDouble(5, Double.parseDouble(paramHaber.getText()));
-
-            // Ejecutar la consulta
-            cs.execute();
-
-            JOptionPane.showMessageDialog(null, "Se insertó correctamente el movimiento");
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(null, "Error: Los valores de Debe y Haber deben ser números.");
-        } catch (ParseException e) {
-            JOptionPane.showMessageDialog(null, "Error al convertir la fecha: Formato de fecha incorrecto.");
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Error al insertar el movimiento: " + e.getMessage());
-        }
+    // Verificar que todos los campos estén llenos
+    if (paramFecha.getText().isEmpty()) {
+        JOptionPane.showMessageDialog(null, "El campo Fecha es obligatorio.");
+        return;
     }
+    if (paramCuentaID.getSelectedItem() == null) {
+        JOptionPane.showMessageDialog(null, "El campo CuentaID es obligatorio.");
+        return;
+    }
+    if (Descripcion.getText().isEmpty()) {
+        JOptionPane.showMessageDialog(null, "El campo Descripción es obligatorio.");
+        return;
+    }
+    if (paramDebe.getText().isEmpty()) {
+        JOptionPane.showMessageDialog(null, "El campo Debe es obligatorio.");
+        return;
+    }
+    if (paramHaber.getText().isEmpty()) {
+        JOptionPane.showMessageDialog(null, "El campo Haber es obligatorio.");
+        return;
+    }
+
+    // Insertar el movimiento en la base de datos
+    String consulta = "INSERT INTO Movimientos (Fecha, CuentaID, Descripcion, Debe, Haber) VALUES (?, ?, ?, ?, ?)";
+    try {
+        CallableStatement cs = ComunDB.obtenerConexion().prepareCall(consulta);
+
+        // Convertir la fecha al formato adecuado para la base de datos
+        SimpleDateFormat inputDateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        java.util.Date parsedDate = inputDateFormat.parse(paramFecha.getText());
+        SimpleDateFormat outputDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String formattedDate = outputDateFormat.format(parsedDate);
+
+        // Establecer los valores de los parámetros
+        cs.setString(1, formattedDate);
+        cs.setString(2, (String) paramCuentaID.getSelectedItem());
+        cs.setString(3, Descripcion.getText());
+        cs.setDouble(4, Double.parseDouble(paramDebe.getText()));
+        cs.setDouble(5, Double.parseDouble(paramHaber.getText()));
+
+        // Ejecutar la consulta
+        cs.execute();
+
+        JOptionPane.showMessageDialog(null, "Se insertó correctamente el movimiento");
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(null, "Error: Los valores de Debe y Haber deben ser números.");
+    } catch (ParseException e) {
+        JOptionPane.showMessageDialog(null, "Error al convertir la fecha: Formato de fecha incorrecto.");
+    } catch (SQLException e) {
+        JOptionPane.showMessageDialog(null, "Error al insertar el movimiento: " + e.getMessage());
+    }
+}
+
 
     public void mostrarMovimientos(JTable tablaMovimientos) {
         DefaultTableModel modelo = new DefaultTableModel();
