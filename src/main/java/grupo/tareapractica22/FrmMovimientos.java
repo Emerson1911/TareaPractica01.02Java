@@ -234,7 +234,7 @@ public class FrmMovimientos extends javax.swing.JFrame {
     private void jToggleButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton2ActionPerformed
         // TODO add your handling code here:
         Movimientos movimientos = new Movimientos();
-        //movimientos.ModificarCuenta(tbRegistroMovimientos, txtFecha, cbCuentaID, txtDescripcion, txtDebe, txtHaber);
+        movimientos.ModificarCuenta(tbRegistroMovimientos, txtFecha, cbCuentaID, txtDescripcion, txtDebe, txtHaber);
         movimientos.mostrarMovimientos(tbRegistroMovimientos);
     }//GEN-LAST:event_jToggleButton2ActionPerformed
 

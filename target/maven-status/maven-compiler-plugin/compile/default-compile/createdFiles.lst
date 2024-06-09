@@ -21,5 +21,6 @@ entidades\Cuentas.class
 entidades\Movimientos.class
 accesoadatos\ComunDB.class
 grupo\tareapractica22\TareaPractica22.class
+grupo\tareapractica22\FrmCuentas$6.class
 grupo\tareapractica22\FrmMovimientos$3.class
 grupo\tareapractica22\FrmCuentas$1.class

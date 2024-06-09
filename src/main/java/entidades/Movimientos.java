@@ -193,6 +193,57 @@ public class Movimientos {
             JOptionPane.showMessageDialog(null, "Error al seleccionar la fila: " + e.toString());
         }
     }
+    
+    public void ModificarCuenta(JTable paramTablaCuenta, JTextField paramFecha, JComboBox<String> paramCuentaID, JTextField paramDescripcion, JTextField paramDebe, JTextField paramHaber) {
+    try {
+        // Check if a row is selected in the table
+        int selectedRow = paramTablaCuenta.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(null, "No row selected. Please select a row to modify.");
+            return;
+        }
+
+        // Retrieve MovimientoID from the selected row
+        int movimientoID = (int) paramTablaCuenta.getValueAt(selectedRow, 0);
+        setMovimientoID(movimientoID);
+
+        // Convertir cadena de fecha a java.sql.Date
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        java.util.Date parsedDate = dateFormat.parse(paramFecha.getText());
+        java.sql.Date sqlDate = new java.sql.Date(parsedDate.getTime());
+        setFecha(sqlDate);
+
+        // Extraer valor de JComboBox
+        setCuentaID(Integer.parseInt((String) paramCuentaID.getSelectedItem()));
+
+        // Establecer otros campos
+        setDescripcion(paramDescripcion.getText());
+        setDebe(new BigDecimal(paramDebe.getText())); // Convertir texto a BigDecimal
+        setHaber(new BigDecimal(paramHaber.getText())); // Convertir texto a BigDecimal
+
+        String consulta = "UPDATE Movimientos SET Fecha = ?, CuentaID = ?, Descripcion = ?, Debe = ?, Haber = ? WHERE MovimientoID = ?;";
+
+        try {
+            CallableStatement cs = ComunDB.obtenerConexion().prepareCall(consulta);
+            cs.setDate(1, getFecha());
+            cs.setInt(2, getCuentaID());
+            cs.setString(3, getDescripcion());
+            cs.setBigDecimal(4, getDebe());
+            cs.setBigDecimal(5, getHaber());
+            cs.setInt(6, getMovimientoID());
+
+            cs.execute();
+            JOptionPane.showMessageDialog(null, "Modificación exitosa");
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error al Modificar, error: " + e.toString());
+        }
+    } catch (ParseException e) {
+        JOptionPane.showMessageDialog(null, "Error al convertir la fecha: Formato de fecha incorrecto.");
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(null, "Error: Formato de número incorrecto.");
+    }
+}
+
 
     //public void EliminarCuenta() {
     //  ComunDB conexion = new ComunDB();
