@@ -12,4 +12,5 @@ public enum OperacionesCRUD {
     CREAR,
     MODIFICAR,
     ELIMINAR
+    //Esta no la use jaa
 }

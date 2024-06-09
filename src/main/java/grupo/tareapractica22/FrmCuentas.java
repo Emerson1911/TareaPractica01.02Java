@@ -54,13 +54,13 @@ public class FrmCuentas extends javax.swing.JFrame {
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Registro Cuenta"));
 
-        jLabel1.setText("NumeroCuenta");
+        jLabel1.setText("NumeroCuenta*");
 
-        jLabel2.setText("Nombre");
+        jLabel2.setText("Nombre*");
 
-        jLabel3.setText("Tipo");
+        jLabel3.setText("Tipo*");
 
-        jLabel4.setText("Nivel");
+        jLabel4.setText("Nivel*");
 
         jToggleButton1.setText("Guardar");
         jToggleButton1.addActionListener(new java.awt.event.ActionListener() {
