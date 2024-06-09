@@ -106,35 +106,38 @@ public class Movimientos {
     }
 
     public void crear(JTextField paramFecha, JComboBox<String> paramCuentaID, JTextField Descripcion, JTextField paramDebe, JTextField paramHaber) {
-        // Insertar el movimiento en la base de datos
-        String consulta = "INSERT INTO Movimientos (Fecha, CuentaID, Descripcion, Debe, Haber) VALUES (?, ?, ?, ?, ?)";
-        try {
-            CallableStatement cs = ComunDB.obtenerConexion().prepareCall(consulta);
-
-            // Convertir la fecha al formato adecuado
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            java.util.Date parsedDate = dateFormat.parse(paramFecha.getText());
-            java.sql.Date sqlDate = new java.sql.Date(parsedDate.getTime()); // Convertir a java.sql.Date
-
-            // Establecer los valores de los parámetros
-            cs.setDate(1, sqlDate);
-            cs.setString(2, (String) paramCuentaID.getSelectedItem());
-            cs.setString(3, Descripcion.getText());
-            cs.setDouble(4, Double.parseDouble(paramDebe.getText()));
-            cs.setDouble(5, Double.parseDouble(paramHaber.getText()));
-
-            // Ejecutar la consulta
-            cs.execute();
-
-            JOptionPane.showMessageDialog(null, "Se insertó correctamente el movimiento");
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(null, "Error: Los valores de Debe y Haber deben ser números.");
-        } catch (ParseException e) {
-            JOptionPane.showMessageDialog(null, "Error al convertir la fecha: Formato de fecha incorrecto.");
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Error al insertar el movimiento: " + e.getMessage());
-        }
+    // Insertar el movimiento en la base de datos
+    String consulta = "INSERT INTO Movimientos (Fecha, CuentaID, Descripcion, Debe, Haber) VALUES (?, ?, ?, ?, ?)";
+    try {
+        CallableStatement cs = ComunDB.obtenerConexion().prepareCall(consulta);
+        
+        // Convertir la fecha al formato adecuado para la base de datos
+        SimpleDateFormat inputDateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        java.util.Date parsedDate = inputDateFormat.parse(paramFecha.getText());
+        SimpleDateFormat outputDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String formattedDate = outputDateFormat.format(parsedDate);
+        
+        // Establecer los valores de los parámetros
+        cs.setString(1, formattedDate);
+        cs.setString(2, (String) paramCuentaID.getSelectedItem());
+        cs.setString(3, Descripcion.getText());
+        cs.setDouble(4, Double.parseDouble(paramDebe.getText()));
+        cs.setDouble(5, Double.parseDouble(paramHaber.getText()));
+        
+        // Ejecutar la consulta
+        cs.execute();
+        
+        JOptionPane.showMessageDialog(null, "Se insertó correctamente el movimiento");
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(null, "Error: Los valores de Debe y Haber deben ser números.");
+    } catch (ParseException e) {
+        JOptionPane.showMessageDialog(null, "Error al convertir la fecha: Formato de fecha incorrecto.");
+    } catch (SQLException e) {
+        JOptionPane.showMessageDialog(null, "Error al insertar el movimiento: " + e.getMessage());
     }
+}
+
+    
 
     public void mostrarMovimientos(JTable tablaMovimientos) {
         DefaultTableModel modelo = new DefaultTableModel();
