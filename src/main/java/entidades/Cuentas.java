@@ -104,16 +104,29 @@ public class Cuentas {
     }
 
     public void crear(JTextField paramNumeroCuenta, JTextField paramNombre, JTextField paramTipo, JTextField paramNivel) {
+        // Validar que los campos no estén vacíos
+        if (paramNumeroCuenta.getText().isEmpty() || paramNombre.getText().isEmpty()
+                || paramTipo.getText().isEmpty() || paramNivel.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Todos los campos son requeridos.");
+            return;
+        }
+
+        // Validar que el nivel sea un número entero
+        int nivel;
+        try {
+            nivel = Integer.parseInt(paramNivel.getText());
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "El valor de Nivel debe ser un número entero.");
+            return;
+        }
+
+        // Establecer valores en el objeto
         setNumeroCuenta(paramNumeroCuenta.getText());
         setNombre(paramNombre.getText());
         setTipo(paramTipo.getText());
-        try {
-            setNivel(Integer.parseInt(paramNivel.getText()));
-        } catch (NumberFormatException e) {
-            System.err.println("Error: el valor de Nivel debe ser un número entero.");
-        }
-        // Insertar la cuenta en la base de datos
+        setNivel(nivel);
 
+        // Insertar la cuenta en la base de datos
         String consulta = "INSERT INTO Cuentas (NumeroCuenta, Nombre, Tipo, Nivel) VALUES (?, ?, ?, ?);";
         try {
             CallableStatement cs = ComunDB.obtenerConexion().prepareCall(consulta);
