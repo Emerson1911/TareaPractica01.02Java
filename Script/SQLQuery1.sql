@@ -30,6 +30,24 @@ INSERT INTO Cuentas(NumeroCuenta,Nombre,Tipo,Nivel) VALUES (3,'Cuenta de Banco',
 
 USE TareaPractica;
 UPDATE Cuentas SET Nombre = 'NCuenta de Bancos', Tipo = 'Pagos', Nivel = 4,  Padre = NULL WHERE NumeroCuenta = '2';
+
 DELETE FROM Cuentas where Cuentas.CuentaID=2;
 
 select * from Cuentas;
+
+INSERT INTO Movimientos (Fecha, CuentaID, Descripcion, Debe, Haber)
+VALUES ('2024-06-08', 1, 'Pago de servicios', 100.00, 0.00);
+
+UPDATE Movimientos
+SET Fecha = '2024-06-09', 
+    CuentaID = 2, 
+    Descripcion = 'Pago de alquiler',
+    Debe = 500.00,
+    Haber = 0.00
+WHERE MovimientoID = 1;
+
+DELETE FROM Movimientos
+WHERE MovimientoID = 1;
+
+
+select * from Movimientos;

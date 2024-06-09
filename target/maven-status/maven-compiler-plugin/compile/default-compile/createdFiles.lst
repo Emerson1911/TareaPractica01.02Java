@@ -1,5 +1,6 @@
 grupo\tareapractica22\FrmCeuntasPa$4.class
 grupo\tareapractica22\FrmCuentas$5.class
+grupo\tareapractica22\FrmMovimientos$2.class
 grupo\tareapractica22\FrmCuentas.class
 grupo\tareapractica22\FrmCeuntasPa$2.class
 grupo\tareapractica22\FrmCeuntasPa.class
@@ -11,6 +12,8 @@ grupo\tareapractica22\FrmMovimientos.class
 grupo\tareapractica22\FrmCeuntasPa$1.class
 grupo\tareapractica22\FrmCuentas$2.class
 entidades\Cuentas.class
+entidades\Movimientos.class
+grupo\tareapractica22\FrmCuentas$7.class
 accesoadatos\ComunDB.class
 utilerias\OperacionesCRUD.class
 grupo\tareapractica22\TareaPractica22.class
