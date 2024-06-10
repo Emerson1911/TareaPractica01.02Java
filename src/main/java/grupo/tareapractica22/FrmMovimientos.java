@@ -88,6 +88,8 @@ public class FrmMovimientos extends javax.swing.JFrame {
             }
         });
 
+        txtMovimientoID.setEnabled(false);
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
